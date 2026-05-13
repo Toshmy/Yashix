@@ -35,5 +35,4 @@ window.SITE_NAV = [
   { label: "Home", href: "https://yashix.com", external: true },
   { label: "Migration", href: "index.html" },
   { label: "Records", href: "index.html#records" },
-  { label: "Admin", href: "migration_admin.html" }
 ];
