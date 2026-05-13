@@ -9,7 +9,7 @@ TOSH_LOCK_FAMILY.mountWalletBridge({
 
 const YASH_TOKEN = "0xB7fBB045A14a5D7D6E55dBbf7005Ec138EaDDde9";
 
-    const MIGRATION_VAULT = "0xA8d51b0eAf721BBa8D223c697BBd71Deb7cD3629";
+    const MIGRATION_VAULT = "0x6dD963AEAF7177f537C7488E78Dbbc8fC5A9F0e0";
     const RPC = "https://rpc-pepu-v2-mainnet-0.t.conduit.xyz";
     const CHAIN = 97741;
     const EXPLORER_BASE = "https://pepuscan.com";

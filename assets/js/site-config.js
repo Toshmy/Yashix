@@ -1,6 +1,6 @@
 window.SITE_CONFIG = {
   brand: "YASHIX",
-  brandShort: "YX",
+  brandShort: "YASX",
   siteName: "YASHIX",
   announcement: "YASHIX migration portal for PEPU L2 to ETH records.",
   cta: {
