@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>YASHIX Migration Admin | PEPU Vault</title>
+  <meta name="description" content="Admin dashboard for the YASHIX PEPU migration vault. Export migration records, pause/unpause migration, and withdraw collected PEPU YASH after migration ends." />
+  <meta name="robots" content="noindex,nofollow" />
+  <link rel="canonical" href="https://migrate.yashix.com/migration_admin.html" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="icon" href="assets/favicon.png" type="image/png">
+  <link rel="stylesheet" href="assets/css/theme.css">
+  <link rel="stylesheet" href="assets/css/toshlock-family.css">
+  <link rel="stylesheet" href="assets/css/migration.css">
+</head>
+<body class="tlf-page">
+  <div id="site-header-root"></div>
+
+<main>
+    <section class="section tlf-hero">
+      <div class="tlf-shell">
+        <div class="admin-hero-card">
+          <div class="admin-hero-content">
+            <span class="eyebrow">Yashix migration admin • PEPU vault</span>
+            <h1 class="h2">Manage the PEPU migration records.</h1>
+            <p class="lead">
+              Export the depositor list, monitor totals, pause/unpause the vault if needed, and withdraw collected PEPU YASH after the migration window ends.
+            </p>
+
+            <nav class="tlf-subnav" data-tlf-nav aria-label="Yashix admin navigation">
+              <a href="#overview">Overview</a>
+              <a href="#actions">Actions</a>
+              <a href="#records">Records</a>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-tight" id="overview">
+      <div class="tlf-shell tlf-grid-main tlf-grid-main--sidebar admin-grid">
+        <section class="tlf-panel">
+          <div class="tlf-panel-head">
+            <div>
+              <h2>Vault overview</h2>
+              <p style="margin:.45rem 0 0;">Read-only status for the deployed PEPU migration vault.</p>
+            </div>
+            <div class="tlf-sr-only">
+              <span id="walletStatePill" class="tlf-status-pill">Wallet not connected</span>
+              <button id="openWalletPanelBtn" class="button-secondary" type="button" data-tlf-open-wallet>Open Wallet</button>
+            </div>
+          </div>
+
+          <div class="admin-kpi-grid">
+            <div class="admin-kpi">
+              <small>Vault</small>
+              <strong id="vaultShort" class="mono">—</strong>
+              <span>Migration vault contract</span>
+            </div>
+            <div class="admin-kpi">
+              <small>YASH token</small>
+              <strong id="tokenMeta">—</strong>
+              <span id="tokenAddressShort" class="mono">—</span>
+            </div>
+            <div class="admin-kpi">
+              <small>Total migrated</small>
+              <strong id="totalMigrated">—</strong>
+              <span>Exact YASH received by vault</span>
+            </div>
+            <div class="admin-kpi">
+              <small>Total users</small>
+              <strong id="totalUsers">—</strong>
+              <span>Unique PEPU deposit wallets</span>
+            </div>
+            <div class="admin-kpi">
+              <small>Migration state</small>
+              <strong id="migrationState">—</strong>
+              <span id="migrationTimeLeft">—</span>
+            </div>
+            <div class="admin-kpi">
+              <small>Paused</small>
+              <strong id="pausedState">—</strong>
+              <span>Emergency control state</span>
+            </div>
+            <div class="admin-kpi">
+              <small>Start</small>
+              <strong id="startTime">—</strong>
+              <span>Migration window opens</span>
+            </div>
+            <div class="admin-kpi">
+              <small>End</small>
+              <strong id="endTime">—</strong>
+              <span>Migration window closes</span>
+            </div>
+          </div>
+
+          <div id="statusHelper" class="admin-status warn">Load the vault and connect the owner wallet for admin actions.</div>
+          <pre id="adminLog" class="admin-log"></pre>
+        </section>
+
+        <aside class="tlf-panel">
+          <h2>Admin wallet</h2>
+          <p style="margin:.45rem 0 0;">Only the vault owner can pause, unpause, withdraw, or recover funds.</p>
+
+          <div class="admin-summary-item" style="margin-top:1rem;">
+            <span>Connected wallet</span>
+            <strong id="summaryWallet">Not connected</strong>
+          </div>
+          <div class="admin-summary-item" style="margin-top:.75rem;">
+            <span>Vault owner</span>
+            <strong id="ownerWallet" class="mono">—</strong>
+          </div>
+          <div class="admin-summary-item" style="margin-top:.75rem;">
+            <span>Owner check</span>
+            <strong id="ownerCheck">—</strong>
+          </div>
+
+          <div class="admin-status warn">
+            This page does not distribute ETH YASH. It prepares the PEPU-side data for the ETH airdrop or ETH claim contract.
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section section-tight" id="actions">
+      <div class="tlf-shell tlf-panel">
+        <div class="tlf-panel-head">
+          <div>
+            <h2>Necessary admin actions</h2>
+            <p style="margin:.45rem 0 0;">Only the minimal controls needed for the PEPU migration vault.</p>
+          </div>
+          <button id="refreshAll" class="button-secondary" type="button">Refresh</button>
+        </div>
+
+        <div class="admin-actions-grid">
+          <article class="admin-action-card">
+            <h3>Pause / Unpause</h3>
+            <p>Use only if there is an emergency, wrong configuration, or suspicious activity.</p>
+            <div class="row">
+              <button id="pauseBtn" class="button-secondary" type="button">Pause migration</button>
+              <button id="unpauseBtn" class="button" type="button">Unpause migration</button>
+            </div>
+          </article>
+
+          <article class="admin-action-card">
+            <h3>Withdraw collected PEPU YASH after end</h3>
+            <p>Available only after migrationEnd. Use this to move collected PEPU YASH to the wallet that will handle final PEPU-side cleanup/liquidity process.</p>
+            <div class="row">
+              <input id="withdrawTo" class="admin-input mono" placeholder="0x... recipient wallet" />
+              <button id="withdrawYashBtn" class="button" type="button">Withdraw migrated YASH</button>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-tight" id="records">
+      <div class="tlf-shell tlf-panel">
+        <div class="tlf-panel-head">
+          <div>
+            <h2>Migration records export</h2>
+            <p style="margin:.45rem 0 0;">This is the source list for ETH distribution: PEPU wallet, ETH receiver, exact YASH amount, and timestamps.</p>
+          </div>
+          <span id="recordCount" class="tlf-status-pill">No records loaded</span>
+        </div>
+
+        <div class="admin-toolbar">
+          <input id="recordSearch" class="admin-input mono" placeholder="Filter PEPU wallet / ETH receiver..." />
+          <button id="loadRecords" class="button-secondary" type="button">Load Records</button>
+          <button id="exportCsv" class="button-secondary" type="button" disabled>Export CSV</button>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>PEPU wallet</th>
+                <th>ETH receiver</th>
+                <th class="right">YASH amount</th>
+                <th>Raw amount</th>
+                <th>First deposit</th>
+                <th>Last deposit</th>
+              </tr>
+            </thead>
+            <tbody id="recordRows">
+              <tr><td colspan="7">Load records after the vault is deployed.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <pre id="recordsLog" class="admin-log"></pre>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer-root"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@walletconnect/ethereum-provider@2.23.6/dist/index.umd.min.js"></script>
+  <script src="assets/js/site-config.js"></script>
+  <script src="assets/js/site-layout.js"></script>
+  <script src="assets/js/toshlock-family.js"></script>
+  <script src="assets/js/migration-admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>YASHIX Migration | PEPU to ETH</title>
+  <meta name="description" content="Migrate YASH from PEPU L2 to ETH. Connect your PEPU wallet, approve YASH, and record your 1:1 migration." />
+  <link rel="canonical" href="https://migrate.yashix.com/" />
+  <meta property="og:title" content="YASHIX Migration | PEPU to ETH" />
+  <meta property="og:description" content="YASHIX PEPU L2 to ETH migration portal." />
+  <meta property="og:image" content="assets/logo.png" />
+  <meta property="og:url" content="https://migrate.yashix.com/" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="icon" href="assets/favicon.png" type="image/png">
+  <link rel="stylesheet" href="assets/css/theme.css">
+  <link rel="stylesheet" href="assets/css/toshlock-family.css">
+  <link rel="stylesheet" href="assets/css/migration.css">
+</head>
+<body class="tlf-page">
+  <div id="site-header-root"></div>
+
+<main>
+    <section class="section tlf-hero">
+      <div class="tlf-shell">
+        <div class="migration-hero-card">
+          <div class="migration-hero-content">
+            <span class="eyebrow">Yashix migration • PEPU to ETH</span>
+            <h1 class="h2">Migrate $YASH to ETH 1:1.</h1>
+            <p class="lead">
+              Send your PEPU $YASH into the migration vault and record your migration 1:1.
+            </p>
+
+            <nav class="tlf-subnav" data-tlf-nav aria-label="Yashix migration navigation">
+              <a href="#migrate">Migrate</a>
+              <a href="#status">Your Status</a>
+              <a href="#records">Records</a>
+            </nav>
+
+            <div class="migration-proof">
+              <div class="migration-proof-item">
+                <strong>1:1 migration</strong>
+                <span>The ETH allocation is based on the exact YASH received by the migration vault.</span>
+              </div>
+              <div class="migration-proof-item">
+                <strong>Migration recorded</strong>
+                <span>Your connected PEPU wallet and migration amount are recorded on-chain.</span>
+              </div>
+              <div class="migration-proof-item">
+                <strong>90-day window</strong>
+                <span>Migration availability is controlled by the vault start and end timestamps.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-tight" id="migrate">
+      <div class="tlf-shell tlf-grid-main tlf-grid-main--sidebar migration-grid">
+        <section class="tlf-panel">
+          <div class="tlf-panel-head">
+            <div>
+              <h2>Migrate YASH</h2>
+              <p style="margin:.45rem 0 0;">Connect from the top bar and enter the YASH amount you want to migrate.</p>
+            </div>
+            <div class="tlf-sr-only">
+              <span id="walletStatePill" class="tlf-status-pill">Wallet not connected</span>
+              <button id="openWalletPanelBtn" class="button-secondary" type="button" data-tlf-open-wallet>Open Wallet</button>
+            </div>
+          </div>
+
+          <div class="migration-grid-kpis">
+            <div class="migration-kpi">
+              <small>YASH token</small>
+              <strong id="tokenMeta">—</strong>
+              <span class="mono" id="tokenAddressShort">—</span>
+            </div>
+            <div class="migration-kpi">
+              <small>Your balance</small>
+              <strong id="walletBalance">—</strong>
+              <span>Available PEPU YASH</span>
+            </div>
+            <div class="migration-kpi">
+              <small>Total migrated</small>
+              <strong id="totalMigrated">—</strong>
+              <span>Recorded in the vault</span>
+            </div>
+            <div class="migration-kpi">
+              <small>Migration state</small>
+              <strong id="migrationState">—</strong>
+              <span id="migrationTimeLeft">—</span>
+            </div>
+          </div>
+
+          <div class="migration-form-grid" style="margin-top:1rem;">
+            <div class="migration-field">
+              <label for="amount">Amount of YASH to migrate</label>
+              <input id="amount" class="migration-input" inputmode="decimal" placeholder="0.0" autocomplete="off" />
+            </div>
+
+            <div class="migration-field">
+              <label for="maxBtn">Quick action</label>
+              <button id="maxBtn" class="button-secondary" type="button">Use MAX balance</button>
+            </div>
+
+            <!-- Hidden receiver for the contract.
+                 New users: auto-filled with connected wallet.
+                 Existing users: auto-filled with the stored contract receiver. -->
+            <input id="ethReceiver" type="hidden" autocomplete="off" />
+          </div>
+
+          <div class="migration-actions">
+            <div class="migration-actions-left">
+              <span class="tlf-pill">Ratio: <strong>1 PEPU YASH = 1 ETH YASH</strong></span>
+              <span class="tlf-pill">Vault: <span id="vaultShort">Not configured</span></span>
+            </div>
+            <button id="approveMigrate" class="button" type="button">Approve &amp; Migrate</button>
+          </div>
+
+          <div id="statusHelper" class="migration-status warn">Waiting for wallet and migration vault.</div>
+          <pre id="txlog" class="migration-log"></pre>
+        </section>
+
+        <aside class="tlf-panel" id="status">
+          <h2>Your migration status</h2>
+          <p style="margin:.45rem 0 0;">This reads your current on-chain migration record.</p>
+
+          <div class="migration-summary-stack">
+            <div class="migration-summary-item">
+              <span>PEPU wallet</span>
+              <strong id="summaryWallet">Not connected</strong>
+            </div>
+            <div class="migration-summary-item migration-summary-item--primary">
+              <span>Total deposited</span>
+              <strong id="summaryDeposited">—</strong>
+            </div>
+            <div class="migration-summary-item">
+              <span>First deposit</span>
+              <strong id="summaryFirst">—</strong>
+            </div>
+            <div class="migration-summary-item">
+              <span>Last deposit</span>
+              <strong id="summaryLast">—</strong>
+            </div>
+          </div>
+
+          <div class="migration-status" style="margin-top:1rem;">
+            If you deposit more later, the vault adds it to the same PEPU wallet migration record.
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section section-tight" id="records">
+      <div class="tlf-shell tlf-panel">
+        <div class="tlf-panel-head">
+          <div>
+            <h2>Migration records</h2>
+            <p style="margin:.45rem 0 0;">Public list of PEPU wallets and recorded YASH amounts.</p>
+          </div>
+          <span id="recordCount" class="tlf-status-pill">No records loaded</span>
+        </div>
+
+        <div class="migration-toolbar">
+          <input id="recordSearch" class="migration-input mono" placeholder="Filter PEPU wallet..." />
+          <button id="loadRecords" class="button-secondary" type="button">Load Records</button>
+          <button id="exportCsv" class="button-secondary" type="button" disabled>Export CSV</button>
+        </div>
+
+        <div class="migration-table-wrap">
+          <table class="migration-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>PEPU wallet</th>
+                <th class="right">YASH amount</th>
+                <th>First deposit</th>
+                <th>Last deposit</th>
+              </tr>
+            </thead>
+            <tbody id="recordRows">
+              <tr><td colspan="5">Load records after the vault is deployed.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <pre id="recordsLog" class="migration-log"></pre>
+      </div>
+    </section>
+
+    <section class="section section-tight">
+      <div class="tlf-shell tlf-related">
+        <h2>Migration notes</h2>
+        <p style="margin:.45rem 0 0;">The PEPU vault records deposits. ETH YASH distribution will be based on these records.</p>
+
+        <div class="tlf-cards-grid">
+          <article class="tlf-card">
+            <h3>Step 1</h3>
+            <p>Approve and send your PEPU YASH into the migration vault.</p>
+          </article>
+          <article class="tlf-card">
+            <h3>Step 2</h3>
+            <p>Your PEPU wallet and exact received YASH amount are stored on-chain.</p>
+          </article>
+          <article class="tlf-card">
+            <h3>Step 3</h3>
+            <p>After migration, ETH YASH is distributed 1:1 using the vault records.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer-root"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@walletconnect/ethereum-provider@2.23.6/dist/index.umd.min.js"></script>
+  <script src="assets/js/site-config.js"></script>
+  <script src="assets/js/site-layout.js"></script>
+  <script src="assets/js/toshlock-family.js"></script>
+  <script src="assets/js/migration.js"></script>
+</body>
+</html>
