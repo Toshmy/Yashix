@@ -1,7 +1,10 @@
-// YASHIX - Add ETH YASH token to MetaMask from the top bar
-// Version: v2_20260909_1930
-// This button is independent from the PEPU migration flow.
-// It only asks the wallet to import the Ethereum Mainnet YASH token.
+// YASHIX - Add ETH YASH token to MetaMask / compatible wallets
+// Version: v3_20260909_mobile_patch
+// Purpose:
+// - Add a top-bar button: 🦊 YASH ETH TOKEN
+// - Import ETH YASH token into MetaMask
+// - Does NOT request wallet account connection first
+// - On mobile Chrome/Safari, opens the page inside MetaMask Mobile browser
 
 (function () {
   "use strict";
@@ -15,216 +18,66 @@
     image: "https://migrate.yashix.com/assets/img/yashix-logo-256.png"
   };
 
-  const METAMASK_ICON_URI = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzUiIGhlaWdodD0iMzQiIHZpZXdCb3g9IjAgMCAzNSAzNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTMyLjcwNzcgMzIuNzUyMkwyNS4xNjg4IDMwLjUxNzRMMTkuNDgzMyAzMy45MDA4TDE1LjUxNjcgMzMuODk5MUw5LjgyNzkzIDMwLjUxNzRMMi4yOTIyNSAzMi43NTIyTDAgMjUuMDQ4OUwyLjI5MjI1IDE2LjQ5OTNMMCA5LjI3MDk0TDIuMjkyMjUgMC4zMTIyNTZMMTQuMDY3NCA3LjMxNTU0SDIwLjkzMjZMMzIuNzA3NyAwLjMxMjI1NkwzNSA5LjI3MDk0TDMyLjcwNzcgMTYuNDk5M0wzNSAyNS4wNDg5TDMyLjcwNzcgMzIuNzUyMloiIGZpbGw9IiNGRjVDMTYiLz4KPHBhdGggZD0iTTIuMjkzOTUgMC4zMTIyNTZMMTQuMDY5MSA3LjMyMDQ3TDEzLjYwMDggMTIuMTMwMUwyLjI5Mzk1IDAuMzEyMjU2WiIgZmlsbD0iI0ZGNUMxNiIvPgo8cGF0aCBkPSJNOS44Mjk1OSAyNS4wNTIyTDE1LjAxMDYgMjguOTgxMUw5LjgyOTU5IDMwLjUxNzVWMjUuMDUyMloiIGZpbGw9IiNGRjVDMTYiLz4KPHBhdGggZD0iTTE0LjU5NjYgMTguNTU2NUwxMy42MDA5IDEyLjEzMzNMNy4yMjY5MiAxNi41MDA5TDcuMjIzNjMgMTYuNDk5M1YxNi41MDI1TDcuMjQzMzUgMjAuOTk4M0w5LjgyODA5IDE4LjU1NjVIOS44Mjk3NEgxNC41OTY2WiIgZmlsbD0iI0ZGNUMxNiIvPgo8cGF0aCBkPSJNMzIuNzA3NyAwLjMxMjI1NkwyMC45MzI2IDcuMzIwNDdMMjEuMzk5MyAxMi4xMzAxTDMyLjcwNzcgMC4zMTIyNTZaIiBmaWxsPSIjRkY1QzE2Ii8+CjxwYXRoIGQ9Ik0yNS4xNzIyIDI1LjA1MjJMMTkuOTkxMiAyOC45ODExTDI1LjE3MjIgMzAuNTE3NVYyNS4wNTIyWiIgZmlsbD0iI0ZGNUMxNiIvPgo8cGF0aCBkPSJNMjcuNzc2NiAxNi41MDI1SDI3Ljc3ODNIMjcuNzc2NlYxNi40OTkzTDI3Ljc3NSAxNi41MDA5TDIxLjQwMSAxMi4xMzMzTDIwLjQwNTMgMTguNTU2NUgyNS4xNzIyTDI3Ljc1ODYgMjAuOTk4M0wyNy43NzY2IDE2LjUwMjVaIiBmaWxsPSIjRkY1QzE2Ii8+CjxwYXRoIGQ9Ik05LjgyNzkzIDMwLjUxNzVMMi4yOTIyNSAzMi43NTIyTDAgMjUuMDUyMkg5LjgyNzkzVjMwLjUxNzVaIiBmaWxsPSIjRTM0ODA3Ii8+CjxwYXRoIGQ9Ik0xNC41OTQ3IDE4LjU1NDlMMTYuMDM0MSAyNy44NDA2TDE0LjAzOTMgMjIuNjc3N0w3LjIzOTc1IDIwLjk5ODRMOS44MjYxMyAxOC41NTQ5SDE0LjU5M0gxNC41OTQ3WiIgZmlsbD0iI0UzNDgwNyIvPgo8cGF0aCBkPSJNMjUuMTcyMSAzMC41MTc1TDMyLjcwNzggMzIuNzUyMkwzNS4wMDAxIDI1LjA1MjJIMjUuMTcyMVYzMC41MTc1WiIgZmlsbD0iI0UzNDgwNyIvPgo8cGF0aCBkPSJNMjAuNDA1MyAxOC41NTQ5TDE4Ljk2NTggMjcuODQwNkwyMC45NjA3IDIyLjY3NzdMMjcuNzYwMiAyMC45OTg0TDI1LjE3MjIgMTguNTU0OUgyMC40MDUzWiIgZmlsbD0iI0UzNDgwNyIvPgo8cGF0aCBkPSJNMCAyNS4wNDg4TDIuMjkyMjUgMTYuNDk5M0g3LjIyMTgzTDcuMjM5OTEgMjAuOTk2N0wxNC4wMzk0IDIyLjY3NkwxNi4wMzQzIDI3LjgzODlMMTUuMDA4OSAyOC45NzZMOS44Mjc5MyAyNS4wNDcySDBWMjUuMDQ4OFoiIGZpbGw9IiNGRjhENUQiLz4KPHBhdGggZD0iTTM1LjAwMDEgMjUuMDQ4OEwzMi43MDc4IDE2LjQ5OTNIMjcuNzc4M0wyNy43NjAyIDIwLjk5NjdMMjAuOTYwNyAyMi42NzZMMTguOTY1OCAyNy44Mzg5TDE5Ljk5MTIgMjguOTc2TDI1LjE3MjIgMjUuMDQ3MkgzNS4wMDAxVjI1LjA0ODhaIiBmaWxsPSIjRkY4RDVEIi8+CjxwYXRoIGQ9Ik0yMC45MzI1IDcuMzE1NDNIMTcuNDk5OUgxNC4wNjczTDEzLjYwMDYgMTIuMTI1MUwxNi4wMzQyIDI3LjgzNEgxOC45NjU2TDIxLjQwMDggMTIuMTI1MUwyMC45MzI1IDcuMzE1NDNaIiBmaWxsPSIjRkY4RDVEIi8+CjxwYXRoIGQ9Ik0yLjI5MjI1IDAuMzEyMjU2TDAgOS4yNzA5NEwyLjI5MjI1IDE2LjQ5OTNINy4yMjE4M0wxMy41OTkxIDEyLjEzMDFMMi4yOTIyNSAwLjMxMjI1NloiIGZpbGw9IiM2NjE4MDAiLz4KPHBhdGggZD0iTTEzLjE3IDIwLjQxOTlIMTAuOTM2OUw5LjcyMDk1IDIxLjYwNjJMMTQuMDQwOSAyMi42NzI3TDEzLjE3IDIwLjQxODJWMjAuNDE5OVoiIGZpbGw9IiM2NjE4MDAiLz4KPHBhdGggZD0iTTMyLjcwNzcgMC4zMTIyNTZMMzQuOTk5OSA5LjI3MDk0TDMyLjcwNzcgMTYuNDk5M0gyNy43NzgxTDIxLjQwMDkgMTIuMTMwMUwzMi43MDc3IDAuMzEyMjU2WiIgZmlsbD0iIzY2MTgwMCIvPgo8cGF0aCBkPSJNMjEuODMzIDIwLjQxOTlIMjQuMDY5NEwyNS4yODUzIDIxLjYwNzlMMjAuOTYwNCAyMi42NzZMMjEuODMzIDIwLjQxODJWMjAuNDE5OVoiIGZpbGw9IiM2NjE4MDAiLz4KPHBhdGggZD0iTTE5LjQ4MTcgMzAuODM2MkwxOS45OTExIDI4Ljk3OTRMMTguOTY1OCAyNy44NDIzSDE2LjAzMjdMMTUuMDA3MyAyOC45Nzk0TDE1LjUxNjcgMzAuODM2MiIgZmlsbD0iIzY2MTgwMCIvPgo8cGF0aCBkPSJNMTkuNDgxNiAzMC44MzU5VjMzLjkwMjFIMTUuNTE2NlYzMC44MzU5SDE5LjQ4MTZaIiBmaWxsPSIjQzBDNENEIi8+CjxwYXRoIGQ9Ik05LjgyOTU5IDMwLjUxNDJMMTUuNTIgMzMuOTAwOFYzMC44MzQ2TDE1LjAxMDYgMjguOTc3OEw5LjgyOTU5IDMwLjUxNDJaIiBmaWxsPSIjRTdFQkY2Ii8+CjxwYXRoIGQ9Ik0yNS4xNzIxIDMwLjUxNDJMMTkuNDgxNyAzMy45MDA4VjMwLjgzNDZMMTkuOTkxMSAyOC45Nzc4TDI1LjE3MjEgMzAuNTE0MloiIGZpbGw9IiNFN0VCRjYiLz4KPC9zdmc+Cg==";
-
-  const DESKTOP_ID = "add-yash-eth-token-topbar";
-  const MOBILE_ID = "add-yash-eth-token-mobile";
-  const MOBILE_MENU_ID = "add-yash-eth-token-mobile-menu";
-
-  function injectStyles() {
-    if (document.getElementById("add-yash-eth-token-style")) return;
-
-    const style = document.createElement("style");
-    style.id = "add-yash-eth-token-style";
-    style.textContent = `
-      .yash-add-token-btn {
-        position: relative;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: .52rem;
-        min-height: 44px;
-        padding: .45rem .72rem;
-        border-radius: 10px;
-        border: 1px solid rgba(255,255,255,.10);
-        background:
-          radial-gradient(circle at 0 0, rgba(255,92,22,.20), transparent 38%),
-          radial-gradient(circle at 100% 0, rgba(0,255,174,.15), transparent 42%),
-          linear-gradient(180deg, rgba(255,255,255,.065), rgba(255,255,255,.035));
-        color: #eafff7;
-        font: inherit;
-        font-weight: 950;
-        letter-spacing: -.015em;
-        cursor: pointer;
-        transition: transform .14s ease, border-color .14s ease, box-shadow .14s ease, filter .14s ease;
-        box-shadow: 0 16px 42px rgba(0,0,0,.26), inset 0 1px 0 rgba(255,255,255,.08);
-        white-space: nowrap;
-      }
-
-      .yash-add-token-btn:hover {
-        transform: translateY(-1px);
-        border-color: rgba(255,136,58,.42);
-        box-shadow: 0 18px 48px rgba(255,92,22,.12), 0 16px 42px rgba(0,0,0,.28);
-        filter: brightness(1.03);
-      }
-
-      .yash-add-token-btn:disabled {
-        opacity: .72;
-        cursor: not-allowed;
-        transform: none;
-      }
-
-      .yash-add-token-icon {
-        width: 30px;
-        height: 30px;
-        border-radius: 10px;
-        display: grid;
-        place-items: center;
-        overflow: hidden;
-        background: #07111e;
-        border: 1px solid rgba(255,255,255,.10);
-        box-shadow: 0 0 0 4px rgba(255,92,22,.045);
-        flex: 0 0 auto;
-      }
-
-      .yash-add-token-icon img {
-        width: 22px;
-        height: 22px;
-        display: block;
-      }
-
-      .yash-add-token-copy {
-        display: grid;
-        line-height: 1.08;
-        text-align: left;
-      }
-
-      .yash-add-token-label {
-        font-size: .82rem;
-        color: #fff7ed;
-      }
-
-      .yash-add-token-sub {
-        margin-top: .1rem;
-        font-size: .62rem;
-        color: #ffc69f;
-        font-weight: 800;
-      }
-
-      .yash-add-token-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 999px;
-        background: #ff7a1a;
-        box-shadow: 0 0 0 3px rgba(255,122,26,.14), 0 0 18px rgba(255,122,26,.32);
-        flex: 0 0 auto;
-      }
-
-      .yash-add-token-btn.is-mobile-icon {
-        width: 42px;
-        min-width: 42px;
-        height: 40px;
-        min-height: 40px;
-        padding: .35rem;
-      }
-
-      .yash-add-token-btn.is-mobile-icon .yash-add-token-icon {
-        width: 26px;
-        height: 26px;
-      }
-
-      .yash-add-token-btn.is-mobile-icon .yash-add-token-icon img {
-        width: 20px;
-        height: 20px;
-      }
-
-      .yash-add-token-btn.is-mobile-icon .yash-add-token-copy,
-      .yash-add-token-btn.is-mobile-icon .yash-add-token-dot {
-        display: none;
-      }
-
-      .mobile-panel .yash-add-token-btn {
-        width: 100%;
-        margin-bottom: .6rem;
-      }
-
-      @media (max-width: 1180px) {
-        .nav-cta .yash-add-token-label { font-size: .76rem; }
-        .nav-cta .yash-add-token-sub { display: none; }
-      }
-    `;
-    document.head.appendChild(style);
+  function $(id) {
+    return document.getElementById(id);
   }
 
-  function makeButton(id, iconOnly) {
-    const btn = document.createElement("button");
-    btn.id = id;
-    btn.type = "button";
-    btn.className = "yash-add-token-btn" + (iconOnly ? " is-mobile-icon" : "");
-    btn.setAttribute("aria-label", "Add ETH YASH token to wallet");
-    btn.title = "Add ETH YASH token to MetaMask";
-    btn.innerHTML = `
-      <span class="yash-add-token-icon" aria-hidden="true"><img src="${METAMASK_ICON_URI}" alt=""></span>
-      <span class="yash-add-token-copy">
-        <span class="yash-add-token-label">YASH ETH TOKEN</span>
-        <span class="yash-add-token-sub">Add to wallet</span>
-      </span>
-      <span class="yash-add-token-dot" aria-hidden="true"></span>
-    `;
-    btn.addEventListener("click", function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      addYashEthToken();
-    });
-    return btn;
+  function isMobileDevice() {
+    return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|Mobile/i.test(navigator.userAgent || "");
   }
 
-  function injectButton() {
-    injectStyles();
+  function setAddTokenStatus(message, type = "info") {
+    let el = $("addYashEthTokenStatus");
 
-    const navCta = document.querySelector(".nav-cta");
-    const walletChip = document.getElementById("wallet-chip");
+    if (!el) {
+      el = document.createElement("span");
+      el.id = "addYashEthTokenStatus";
+      el.className = "yash-add-token-status";
 
-    if (navCta && !document.getElementById(DESKTOP_ID)) {
-      const btn = makeButton(DESKTOP_ID, false);
-      if (walletChip && walletChip.parentElement === navCta) {
-        walletChip.insertAdjacentElement("afterend", btn);
-      } else {
-        navCta.prepend(btn);
+      const btn = $("addYashEthTokenTopbarBtn");
+      if (btn && btn.parentNode) {
+        btn.parentNode.appendChild(el);
       }
     }
 
-    const mobileActions = document.querySelector(".mobile-header-actions");
-    const mobileToggle = document.getElementById("mobile-menu-toggle");
+    if (!el) return;
 
-    if (mobileActions && !document.getElementById(MOBILE_ID)) {
-      const btn = makeButton(MOBILE_ID, true);
-      if (mobileToggle && mobileToggle.parentElement === mobileActions) {
-        mobileActions.insertBefore(btn, mobileToggle);
-      } else {
-        mobileActions.appendChild(btn);
-      }
-    }
-
-    const mobilePanel = document.querySelector("#mobile-menu .mobile-panel");
-
-    if (mobilePanel && !document.getElementById(MOBILE_MENU_ID)) {
-      const btn = makeButton(MOBILE_MENU_ID, false);
-      mobilePanel.insertBefore(btn, mobilePanel.firstChild);
-    }
+    el.textContent = message || "";
+    el.dataset.type = type;
   }
 
-  function setAllButtonsBusy(isBusy, label) {
-    [DESKTOP_ID, MOBILE_ID, MOBILE_MENU_ID].forEach(function (id) {
-      const btn = document.getElementById(id);
-      if (!btn) return;
-      btn.disabled = isBusy;
-      const labelEl = btn.querySelector(".yash-add-token-label");
-      if (labelEl && label) labelEl.textContent = label;
+  async function waitForEthereum(timeout = 2500) {
+    if (window.ethereum && typeof window.ethereum.request === "function") {
+      return window.ethereum;
+    }
+
+    return new Promise((resolve) => {
+      const timer = setTimeout(() => {
+        resolve(window.ethereum && typeof window.ethereum.request === "function" ? window.ethereum : null);
+      }, timeout);
+
+      window.addEventListener(
+        "ethereum#initialized",
+        () => {
+          clearTimeout(timer);
+          resolve(window.ethereum && typeof window.ethereum.request === "function" ? window.ethereum : null);
+        },
+        { once: true }
+      );
     });
   }
 
-  function resetButtonLabels() {
-    [DESKTOP_ID, MOBILE_ID, MOBILE_MENU_ID].forEach(function (id) {
-      const btn = document.getElementById(id);
-      const labelEl = btn?.querySelector(".yash-add-token-label");
-      if (labelEl) labelEl.textContent = "YASH ETH TOKEN";
-    });
+  function openCurrentPageInMetaMaskMobile() {
+    const cleanUrl = window.location.href.replace(/^https?:\/\//i, "");
+    window.location.href = "https://metamask.app.link/dapp/" + cleanUrl;
   }
 
   async function switchToEthereumMainnet(provider) {
-    const chainId = await provider.request({ method: "eth_chainId" });
-    if (String(chainId).toLowerCase() === ETH_MAINNET_CHAIN_ID) return;
+    const currentChainId = await provider.request({ method: "eth_chainId" }).catch(() => null);
+
+    if (String(currentChainId || "").toLowerCase() === ETH_MAINNET_CHAIN_ID) {
+      return;
+    }
 
     await provider.request({
       method: "wallet_switchEthereumChain",
@@ -232,21 +85,34 @@
     });
   }
 
-  async function addYashEthToken() {
-    if (!window.ethereum || typeof window.ethereum.request !== "function") {
-      alert("No wallet detected. Open this page with MetaMask or a compatible wallet browser.");
-      return;
+  async function addYashEthTokenToWallet() {
+    const btn = $("addYashEthTokenTopbarBtn");
+
+    if (btn) {
+      btn.disabled = true;
+      btn.dataset.loading = "true";
     }
 
     try {
-      setAllButtonsBusy(true, "Opening…");
+      const provider = await waitForEthereum();
 
-      await window.ethereum.request({ method: "eth_requestAccounts" });
-      await switchToEthereumMainnet(window.ethereum);
+      if (!provider) {
+        if (isMobileDevice()) {
+          setAddTokenStatus("Opening MetaMask…", "warn");
+          openCurrentPageInMetaMaskMobile();
+          return;
+        }
 
-      setAllButtonsBusy(true, "Confirm…");
+        setAddTokenStatus("No wallet detected.", "error");
+        alert("No wallet detected. Please use MetaMask or a compatible wallet.");
+        return;
+      }
 
-      const added = await window.ethereum.request({
+      setAddTokenStatus("Switching to Ethereum…", "warn");
+      await switchToEthereumMainnet(provider);
+
+      setAddTokenStatus("Opening token import…", "warn");
+      const added = await provider.request({
         method: "wallet_watchAsset",
         params: {
           type: "ERC20",
@@ -255,44 +121,190 @@
       });
 
       if (added) {
-        setAllButtonsBusy(false, "Added ✓");
-        setTimeout(resetButtonLabels, 1800);
+        setAddTokenStatus("YASH ETH token added.", "ok");
       } else {
-        setAllButtonsBusy(false, "Not added");
-        setTimeout(resetButtonLabels, 1800);
+        setAddTokenStatus("Token import cancelled.", "warn");
       }
     } catch (err) {
-      console.error("[YASHIX] add ETH YASH token failed:", err);
+      console.error("[YASHIX] Add ETH YASH token failed:", err);
 
       if (err && err.code === 4001) {
-        alert("Token import rejected in wallet.");
+        setAddTokenStatus("Request rejected.", "warn");
       } else {
-        alert(err?.message || "Could not add ETH YASH token to wallet.");
+        setAddTokenStatus(err?.message || "Could not add token.", "error");
       }
-
-      setAllButtonsBusy(false);
-      resetButtonLabels();
+    } finally {
+      if (btn) {
+        btn.disabled = false;
+        btn.dataset.loading = "false";
+      }
     }
   }
 
-  function boot() {
-    injectButton();
+  function injectStyles() {
+    if ($("yashAddTokenTopbarStyles")) return;
 
-    // Header is injected by site-layout / migration.js. Re-check shortly in case script order changes.
-    setTimeout(injectButton, 250);
-    setTimeout(injectButton, 1000);
+    const style = document.createElement("style");
+    style.id = "yashAddTokenTopbarStyles";
+    style.textContent = `
+      .yash-add-token-wrap {
+        display: inline-flex;
+        align-items: center;
+        gap: .45rem;
+        margin-left: .55rem;
+      }
 
-    const obs = new MutationObserver(function () {
-      injectButton();
-    });
-    obs.observe(document.body, { childList: true, subtree: true });
+      .yash-add-token-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: .4rem;
+        min-height: 38px;
+        padding: .58rem .78rem;
+        border-radius: 999px;
+        border: 1px solid rgba(54, 255, 177, .28);
+        background: rgba(5, 16, 13, .72);
+        color: #effff8;
+        font-weight: 800;
+        font-size: .78rem;
+        letter-spacing: .02em;
+        line-height: 1;
+        cursor: pointer;
+        box-shadow: 0 0 18px rgba(24, 255, 169, .08);
+        transition: transform .16s ease, border-color .16s ease, background .16s ease;
+        white-space: nowrap;
+      }
+
+      .yash-add-token-btn:hover {
+        transform: translateY(-1px);
+        border-color: rgba(54, 255, 177, .55);
+        background: rgba(8, 28, 22, .88);
+      }
+
+      .yash-add-token-btn:disabled {
+        opacity: .65;
+        cursor: wait;
+        transform: none;
+      }
+
+      .yash-add-token-fox {
+        width: 1.05rem;
+        height: 1.05rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+      }
+
+      .yash-add-token-status {
+        max-width: 160px;
+        font-size: .68rem;
+        color: rgba(239,255,248,.68);
+        line-height: 1.1;
+      }
+
+      .yash-add-token-status[data-type="ok"] { color: #3ff2a3; }
+      .yash-add-token-status[data-type="warn"] { color: #ffd166; }
+      .yash-add-token-status[data-type="error"] { color: #ff6b6b; }
+
+      @media (max-width: 760px) {
+        .yash-add-token-wrap {
+          margin-left: .35rem;
+        }
+
+        .yash-add-token-btn {
+          min-height: 34px;
+          padding: .48rem .58rem;
+          font-size: .68rem;
+        }
+
+        .yash-add-token-btn .yash-add-token-label-short {
+          display: inline;
+        }
+
+        .yash-add-token-btn .yash-add-token-label-long {
+          display: none;
+        }
+
+        .yash-add-token-status {
+          display: none;
+        }
+      }
+
+      @media (min-width: 761px) {
+        .yash-add-token-btn .yash-add-token-label-short {
+          display: none;
+        }
+      }
+    `;
+
+    document.head.appendChild(style);
+  }
+
+  function createTopbarButton() {
+    if ($("addYashEthTokenTopbarBtn")) return;
+
+    injectStyles();
+
+    const wrap = document.createElement("div");
+    wrap.className = "yash-add-token-wrap";
+
+    const btn = document.createElement("button");
+    btn.id = "addYashEthTokenTopbarBtn";
+    btn.className = "yash-add-token-btn";
+    btn.type = "button";
+    btn.setAttribute("aria-label", "Add ETH YASH token to wallet");
+    btn.title = "Add ETH YASH token to MetaMask";
+    btn.innerHTML = `
+      <span class="yash-add-token-fox" aria-hidden="true">🦊</span>
+      <span class="yash-add-token-label-long">YASH ETH TOKEN</span>
+      <span class="yash-add-token-label-short">YASH</span>
+    `;
+    btn.addEventListener("click", addYashEthTokenToWallet);
+
+    wrap.appendChild(btn);
+
+    // Best target: shared header action area.
+    const walletBtn = document.querySelector("[data-tlf-open-wallet]");
+    const walletParent = walletBtn ? walletBtn.parentElement : null;
+
+    const target =
+      walletParent ||
+      document.querySelector(".nav-cta") ||
+      document.querySelector(".tlf-nav-cta") ||
+      document.querySelector("header nav") ||
+      document.querySelector("header") ||
+      $("site-header-root");
+
+    if (target) {
+      if (walletBtn && walletBtn.parentElement === target) {
+        walletBtn.insertAdjacentElement("afterend", wrap);
+      } else {
+        target.appendChild(wrap);
+      }
+    }
+  }
+
+  function init() {
+    createTopbarButton();
+
+    // site-layout.js may render the header after DOMContentLoaded.
+    // Retry a few times without duplicating the button.
+    let tries = 0;
+    const timer = setInterval(() => {
+      tries += 1;
+      createTopbarButton();
+      if ($("addYashEthTokenTopbarBtn") || tries >= 20) {
+        clearInterval(timer);
+      }
+    }, 250);
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", boot);
+    document.addEventListener("DOMContentLoaded", init);
   } else {
-    boot();
+    init();
   }
 
-  window.addYashEthToken = addYashEthToken;
+  window.addYashEthTokenToWallet = addYashEthTokenToWallet;
 })();
